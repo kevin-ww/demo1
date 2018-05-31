@@ -17,9 +17,7 @@ public class Event {
 
     public static final String CUSTOM_HEADER = "CUSTOM";
 
-//    @Id
-//    @GeneratedValue(strategy= GenerationType.AUTO)
-    private Long id;
+    private Long eventId;
 
     private Long correlationId;
 

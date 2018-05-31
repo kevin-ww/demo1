@@ -2,3 +2,30 @@ kafka:
   bootstrap-servers: kvn1:9092
   topic:
     batch: test
+
+
+spring:
+#  profiles: d
+  application:
+    name: demo
+  datasource:
+    driverClassName: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/flowable?useUnicode=true&autoReconnect=true&characterEncoding=UTF-8&serverTimezone=UTC
+    username: root
+    password:
+    jmx-enabled: true
+    initialSize: 100
+    maxActive: 200
+    minIdle: 5
+    maxIdle: 25
+    maxWait: 10000
+    maxAge: 3600000
+    timeBetweenEvictionRunsMillis: 10000
+    minEvictableIdleTimeMillis: 10000
+    testOnBorrow: true
+    testWhileIdle: false
+    testOnReturn: false
+    validationQuery: "SELECT 1"
+  jpa:
+    show-sql: true
+    database-platform: org.hibernate.dialect.MySQL5Dialect
