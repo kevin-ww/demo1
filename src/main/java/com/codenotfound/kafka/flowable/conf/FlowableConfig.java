@@ -1,7 +1,5 @@
 package com.codenotfound.kafka.flowable.conf;
 
-import com.codenotfound.kafka.flowable.impl.DeferredFlowStage;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
@@ -9,11 +7,15 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 public class FlowableConfig {
+//
+//    @Bean
+//    public DeferredFlowStage deferredFlowStage(){
+//        return new DeferredFlowStage();
+//    }
 
-    @Bean
-    public DeferredFlowStage deferredFlowStage(){
-        return new DeferredFlowStage();
-    }
+
+//@Bean
+//    private DataSource dataSource;
 
 //    @Bean
 //    public JdbcTemplate jdbcTemplate(){

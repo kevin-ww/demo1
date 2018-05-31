@@ -1,10 +1,16 @@
 package com.codenotfound.kafka.flowable;
 
+import org.springframework.jdbc.core.JdbcTemplate;
+
 import java.util.LinkedList;
 
 public class SequentialFlowBuilder {
+
     private String name;
+
     private LinkedList<Stage> stages;
+
+//    private JdbcTemplate jdbcTemplate;
 
     public SequentialFlowBuilder setName(String name) {
         this.name = name;
@@ -17,8 +23,13 @@ public class SequentialFlowBuilder {
 //    }
 
 
-    public SequentialFlowBuilder addStage(Stage stage){
-        if(this.stages==null){
+//    public SequentialFlowBuilder setJdbcTemplate(JdbcTemplate jdbcTemplate) {
+//        this.jdbcTemplate = jdbcTemplate;
+//        return this;
+//    }
+
+    public SequentialFlowBuilder addStage(Stage stage) {
+        if (this.stages == null) {
             this.stages = new LinkedList<>();
         }
         stages.addLast(stage);
@@ -37,7 +48,6 @@ public class SequentialFlowBuilder {
 //    public SequentialFlowBuilder then(Stage stage){
 //        return this.addStage(stage);
 //    }
-
 
 
     public SequentialFlow createSequentialFlow() {

@@ -5,7 +5,7 @@ import com.codenotfound.kafka.flowable.EventEmitter;
 import com.codenotfound.kafka.flowable.exceptions.StageException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.SendResult;
 import org.springframework.util.concurrent.ListenableFuture;
@@ -17,10 +17,18 @@ public class DeferredFlowStage extends FlowStage implements EventEmitter {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DeferredFlowStage.class);
 
-    @Autowired
+//    @Autowired
     private KafkaTemplate<String, String> kafkaTemplate;
 
     private static final String KAFKA_TOPIC="test";
+
+    public DeferredFlowStage(JdbcTemplate jdbcTemplate , KafkaTemplate kafkaTemplate) {
+        super(jdbcTemplate);
+        this.kafkaTemplate = kafkaTemplate;
+    }
+
+
+
 
 
     @Override

@@ -5,7 +5,6 @@ import com.codenotfound.kafka.flowable.Stage;
 import com.codenotfound.kafka.flowable.exceptions.StageException;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -40,9 +39,20 @@ public abstract class FlowStage implements Stage{
             "'%s')";
 
 
+//    @Autowired
+    private JdbcTemplate jdbcTemplate ;
 
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
+
+    public FlowStage(JdbcTemplate jdbcTemplate){
+        this.jdbcTemplate = jdbcTemplate;
+    }
+
+//
+//    public void setJdbcTemplate(JdbcTemplate jdbcTemplate){
+//        this.jdbcTemplate = jdbcTemplate;
+//    }
+
+
 
     @Override
     public void beforeProcess(Event event) throws StageException{

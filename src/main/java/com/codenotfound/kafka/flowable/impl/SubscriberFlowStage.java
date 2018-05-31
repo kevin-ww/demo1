@@ -5,6 +5,7 @@ import com.codenotfound.kafka.flowable.EventSubscriber;
 import com.codenotfound.kafka.flowable.exceptions.StageException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.messaging.handler.annotation.Header;
@@ -18,6 +19,10 @@ public class SubscriberFlowStage extends FlowStage implements EventSubscriber {
 
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SubscriberFlowStage.class);
+
+    public SubscriberFlowStage(JdbcTemplate jdbcTemplate) {
+        super(jdbcTemplate);
+    }
 
     @Override
     public void onEvents(Event... event) {

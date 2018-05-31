@@ -10,6 +10,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +23,9 @@ public class SampleService {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
+
+    @Autowired
+    private KafkaTemplate<String, String> kafkaTemplate;
 
 
     public String sampleService(String name,String org){
@@ -36,7 +40,7 @@ public class SampleService {
 
         final SequentialFlow sequentialFlow = new SequentialFlowBuilder()
 
-                .addStage(new FlowStage() {
+                .addStage(new FlowStage(jdbcTemplate) {
                     @Override
                     public void customProcess(Event event) throws StageException {
                         final TestPayload payload = (TestPayload) event.getPayload();
@@ -48,7 +52,7 @@ public class SampleService {
                         }
 
                     }
-                }).addStage(new DeferredFlowStage() {
+                }).addStage(new DeferredFlowStage(jdbcTemplate,kafkaTemplate) {
                     @Override
                     public void customProcess(Event event) throws StageException {
 

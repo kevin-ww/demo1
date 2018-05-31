@@ -12,12 +12,15 @@ public class SequentialFlow implements Flow {
 
     private String name;
 
+//    private JdbcTemplate jdbcTemplate;
+
     private LinkedList<Stage> stages;
 
 
     public SequentialFlow(String name, LinkedList<Stage> stages) {
         this.name = name;
         this.stages = stages;
+//        this.jdbcTemplate = jdbcTemplate;
     }
 
 
