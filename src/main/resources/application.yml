@@ -1,5 +1,5 @@
 kafka:
-  bootstrap-servers: kvn1:9092
+  bootstrap-servers: org1:9092
   topic:
     batch: test
 

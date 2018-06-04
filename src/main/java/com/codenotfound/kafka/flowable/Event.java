@@ -2,6 +2,7 @@ package com.codenotfound.kafka.flowable;
 
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,11 +12,14 @@ import java.util.Map;
 
 @Data
 //@Entity
-public class Event {
+public class Event implements Serializable{
 
-    public static final String STAGE_HEADER = "STAGE";
 
-    public static final String CUSTOM_HEADER = "CUSTOM";
+    public static final String FLOW_STATUS = "FS";
+
+    public static final String FLOW_STATUS_FAILED="FSF";
+
+    public static final String FLOW_STATUS_SUCCEED="FSS";
 
     private Long eventId;
 
@@ -23,7 +27,13 @@ public class Event {
 
     Object payload;
 
+//    Map<String,Object> callbacks;
+
     Map<String,String> headers = new HashMap<>();
+
+    public Event(Object payload){
+        this.payload = payload;
+    }
 
     public void setHeader(String k, String val){
         headers.put(k,val);
@@ -31,6 +41,14 @@ public class Event {
 
     public String getHeader(String k){
         return headers.get(k);
+    }
+
+    public String Serialize(){
+        return this.toString();
+    }
+
+    public Event deSerialize(String s){
+        return new Event(null);
     }
 
 }

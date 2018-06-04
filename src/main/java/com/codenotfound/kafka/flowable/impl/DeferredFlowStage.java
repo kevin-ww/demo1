@@ -2,41 +2,58 @@ package com.codenotfound.kafka.flowable.impl;
 
 import com.codenotfound.kafka.flowable.Event;
 import com.codenotfound.kafka.flowable.EventEmitter;
+import com.codenotfound.kafka.flowable.EventSerializer;
 import com.codenotfound.kafka.flowable.exceptions.StageException;
+import com.codenotfound.kafka.flowable.utils.JsonEventSerializer;
+import org.apache.kafka.clients.producer.RecordMetadata;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.kafka.support.SendResult;
-import org.springframework.util.concurrent.ListenableFuture;
 
-/**
- * Created by kevin on 2018/5/30.
- */
-public class DeferredFlowStage extends FlowStage implements EventEmitter {
+import java.util.concurrent.TimeUnit;
+
+
+public class DeferredFlowStage extends FlowStage implements EventEmitter<Event> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DeferredFlowStage.class);
 
-//    @Autowired
     private KafkaTemplate<String, String> kafkaTemplate;
 
-    private static final String KAFKA_TOPIC="test";
+    private EventSerializer<Event, String> eventSerializer = new JsonEventSerializer();
 
-    public DeferredFlowStage(JdbcTemplate jdbcTemplate , KafkaTemplate kafkaTemplate) {
+    private String kafkaTopic;
+
+//    private static final String KAFKA_TOPIC = "test";
+
+    protected static final int DEFAULT_EMIT_TIMEOUT = 3000;
+
+    public DeferredFlowStage(JdbcTemplate jdbcTemplate, KafkaTemplate kafkaTemplate, String kafkaTopic) {
         super(jdbcTemplate);
         this.kafkaTemplate = kafkaTemplate;
+        this.kafkaTopic = kafkaTopic;
     }
 
 
-
-
+    @Override
+    public String getName() {
+        return "deferredStage";
+    }
 
     @Override
-    public void emit(Event event) {
+    public void emit(Event event) throws Exception {
 
-        final ListenableFuture<SendResult<String, String>> send = kafkaTemplate.send(KAFKA_TOPIC, event.toString());
-        //handle the send;
-        LOGGER.info("msg status {}",send);
+
+        //TODO; confirm the message emit;
+
+        final RecordMetadata recordMetadata = kafkaTemplate
+                .send(this.kafkaTopic, eventSerializer.to(event))
+                .get(DEFAULT_EMIT_TIMEOUT, TimeUnit.MILLISECONDS)
+                .getRecordMetadata();
+
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("record meta data : ", recordMetadata);
+        }
 
     }
 
@@ -47,8 +64,11 @@ public class DeferredFlowStage extends FlowStage implements EventEmitter {
 
     @Override
     public void process(Event event) throws StageException {
-        persistentEvent(event);
-        customProcess(event);
-        emit(event);
+        internalProcess(event);
+        try {
+            emit(event);
+        } catch (Exception e) {
+            throw new StageException(e);
+        }
     }
 }

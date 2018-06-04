@@ -12,6 +12,8 @@
  Date: 05/31/2018 14:52:00 PM
 */
 
+create database flowabl;
+
 CREATE TABLE `events` (
   `eventId` bigint(20) NOT NULL AUTO_INCREMENT,
   `correlationId` varchar(50) NOT NULL,

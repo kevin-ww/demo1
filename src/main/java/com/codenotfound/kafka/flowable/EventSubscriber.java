@@ -3,9 +3,8 @@ package com.codenotfound.kafka.flowable;
 /**
  * Created by kevin on 2018/5/30.
  */
-public interface EventSubscriber {
+public interface EventSubscriber<E> {
 
-    void onEvents(Event... event);
+    void onEvents(E... events);
 
-//    void subscribeInBatch(Event... events);
 }
