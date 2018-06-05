@@ -1,4 +1,4 @@
-package com.codenotfound.kafka.consumer;
+package com.codenotfound.kafka.flowable.conf;
 
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
@@ -40,7 +40,7 @@ public class ReceiverConfig {
 
   @Bean
   public ConcurrentKafkaListenerContainerFactory<String, String> kafkaListenerContainerFactory() {
-    ConcurrentKafkaListenerContainerFactory<String, String> factory =
+      ConcurrentKafkaListenerContainerFactory<String, String> factory =
         new ConcurrentKafkaListenerContainerFactory<>();
     factory.setConsumerFactory(consumerFactory());
     // enable batch listening
@@ -49,8 +49,9 @@ public class ReceiverConfig {
     return factory;
   }
 
-  @Bean
-  public Receiver receiver() {
-    return new Receiver();
-  }
+//  @Bean
+//  public Receiver receiver() {
+//    return new Receiver();
+//  }
+
 }

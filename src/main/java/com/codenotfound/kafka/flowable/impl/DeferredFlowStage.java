@@ -2,7 +2,6 @@ package com.codenotfound.kafka.flowable.impl;
 
 import com.codenotfound.kafka.flowable.Event;
 import com.codenotfound.kafka.flowable.EventEmitter;
-import com.codenotfound.kafka.flowable.EventSerializer;
 import com.codenotfound.kafka.flowable.exceptions.StageException;
 import com.codenotfound.kafka.flowable.utils.JsonEventSerializer;
 import org.apache.kafka.clients.producer.RecordMetadata;
@@ -13,6 +12,8 @@ import org.springframework.kafka.core.KafkaTemplate;
 
 import java.util.concurrent.TimeUnit;
 
+import static com.codenotfound.kafka.flowable.conf.FlowableConfig.DEFAULT_KAFKA_PRODUCER_TIMEOUT;
+
 
 public class DeferredFlowStage extends FlowStage implements EventEmitter<Event> {
 
@@ -20,13 +21,8 @@ public class DeferredFlowStage extends FlowStage implements EventEmitter<Event> 
 
     private KafkaTemplate<String, String> kafkaTemplate;
 
-    private EventSerializer<Event, String> eventSerializer = new JsonEventSerializer();
 
     private String kafkaTopic;
-
-//    private static final String KAFKA_TOPIC = "test";
-
-    protected static final int DEFAULT_EMIT_TIMEOUT = 3000;
 
     public DeferredFlowStage(JdbcTemplate jdbcTemplate, KafkaTemplate kafkaTemplate, String kafkaTopic) {
         super(jdbcTemplate);
@@ -43,12 +39,11 @@ public class DeferredFlowStage extends FlowStage implements EventEmitter<Event> 
     @Override
     public void emit(Event event) throws Exception {
 
-
         //TODO; confirm the message emit;
 
         final RecordMetadata recordMetadata = kafkaTemplate
-                .send(this.kafkaTopic, eventSerializer.to(event))
-                .get(DEFAULT_EMIT_TIMEOUT, TimeUnit.MILLISECONDS)
+                .send(this.kafkaTopic, JsonEventSerializer.to(event))
+                .get(DEFAULT_KAFKA_PRODUCER_TIMEOUT, TimeUnit.MILLISECONDS)
                 .getRecordMetadata();
 
         if (LOGGER.isDebugEnabled()) {

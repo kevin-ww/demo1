@@ -1,6 +1,8 @@
 package com.codenotfound.kafka.flowable;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -11,9 +13,8 @@ import java.util.Map;
  */
 
 @Data
-//@Entity
+@NoArgsConstructor
 public class Event implements Serializable{
-
 
     public static final String FLOW_STATUS = "FS";
 
@@ -21,14 +22,16 @@ public class Event implements Serializable{
 
     public static final String FLOW_STATUS_SUCCEED="FSS";
 
+    @JSONField
     private Long eventId;
 
+    @JSONField
     private Long correlationId;
 
+    @JSONField
     Object payload;
 
-//    Map<String,Object> callbacks;
-
+    @JSONField
     Map<String,String> headers = new HashMap<>();
 
     public Event(Object payload){
@@ -41,14 +44,6 @@ public class Event implements Serializable{
 
     public String getHeader(String k){
         return headers.get(k);
-    }
-
-    public String Serialize(){
-        return this.toString();
-    }
-
-    public Event deSerialize(String s){
-        return new Event(null);
     }
 
 }

@@ -18,15 +18,7 @@ public abstract class FlowStage implements Stage<Event> {
     protected static final Logger LOGGER = LoggerFactory.getLogger(FlowStage.class);
 
 
-//    public static final String PROCESS_SUCCESS = "S";
-
-
-//    public static final String PROCESS_FAIL = "F";
-
-    public static final String CORRELATION_ID = "CORRELATION_ID";
-
-
-//    public static final String EVENT_ID = "EVENT_ID";
+    public static final String CORRELATION_ID = "cid";
 
 
     public static final String statementPattern =
@@ -41,20 +33,10 @@ public abstract class FlowStage implements Stage<Event> {
     private JdbcTemplate jdbcTemplate;
 
 
-    public FlowStage(){
-        //
-
-    }
-
     public FlowStage(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-
-//    @Override
-//    public void setName(String name) {
-//        this.name="flowStage";
-//    }
 
     @Override
     public String getName() {
@@ -73,13 +55,10 @@ public abstract class FlowStage implements Stage<Event> {
     public abstract void customProcess(Event event) throws Exception;
 
 
-    protected void internalProcess(Event event) throws StageException{
-        logEvent(event);
-
-
-
+    protected void internalProcess(Event event) throws StageException {
 
         try {
+            logEvent(event);
             //interceptor1
             beforeProcess(event);
             //call custom process
@@ -117,32 +96,20 @@ public abstract class FlowStage implements Stage<Event> {
     }
 
 
-    protected void logEvent(Event event, Throwable t) throws StageException {
+    protected void logEvent(Event event, Throwable t) {
         //
-        try {
 
-            String correlationId = event.getHeader(CORRELATION_ID);
+        String correlationId = event.getHeader(CORRELATION_ID);
 
-            final String sql = String.format(statementPattern, correlationId, this.getName(), event
-                    .getHeaders().toString(), t);
+        final String sql = String.format(statementPattern, correlationId, this.getName(), event
+                .getHeaders().toString(), t);
 
-            int eventId = JdbcUtils.insertAndGetAutoIncreasedId(jdbcTemplate, sql);
+        int eventId = JdbcUtils.insertAndGetAutoIncreasedId(jdbcTemplate, sql);
 
-            if (StringUtils.isEmpty(correlationId)) {
-                event.setHeader(CORRELATION_ID, String.valueOf(eventId));
-            }
-
-
-        } catch (Exception e) {
-            throw new StageException("exception occurred when doing persistent event", e);
+        if (StringUtils.isEmpty(correlationId)) {
+            event.setHeader(CORRELATION_ID, String.valueOf(eventId));
         }
+
     }
 
-
-    @Override
-    public String toString() {
-        return "Stage{" +
-                "name=" + getName() +
-                '}';
-    }
 }

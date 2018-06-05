@@ -11,33 +11,23 @@ import org.springframework.web.client.RestTemplate;
  */
 @Configuration
 public class FlowableConfig {
-//
-//    @Bean
-//    public DeferredFlowStage deferredFlowStage(){
-//        return new DeferredFlowStage();
-//    }
 
 
-//@Bean
-//    private DataSource dataSource;
+    public static final int DEFAULT_HTTP_TIMEOUT = 500;
 
-//    @Bean
-//    public JdbcTemplate jdbcTemplate(){
-//        return new JdbcTemplate();
-//    }
+    public static final int DEFAULT_KAFKA_PRODUCER_TIMEOUT = 3000;
 
 
-    //TODO , don't use this;
+    //TODO , don't use this in production;
     @Bean
-    public RestTemplate restTemplate(){
+    public RestTemplate restTemplate() {
         return new RestTemplate(getClientHttpRequestFactory());
     }
 
-    private ClientHttpRequestFactory getClientHttpRequestFactory() {
-        int timeout = 1000;
 
+    private ClientHttpRequestFactory getClientHttpRequestFactory() {
         SimpleClientHttpRequestFactory simpleClientHttpRequestFactory = new SimpleClientHttpRequestFactory();
-        simpleClientHttpRequestFactory.setConnectTimeout(timeout);
+        simpleClientHttpRequestFactory.setConnectTimeout(DEFAULT_HTTP_TIMEOUT);
         return simpleClientHttpRequestFactory;
     }
 
